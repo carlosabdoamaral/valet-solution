@@ -19,7 +19,7 @@ CREATE TABLE car_tb(
     id_parking_lot INT REFERENCES parking_lot_tb(id) NOT NULL,
     id_discount_tier INT REFERENCES discount_tier_tb(id) NOT NULL,
     license_plate VARCHAR NOT NULL,
-    did_paid bool DEFAULT false
+    did_paid bool DEFAULT false,
     entrance_at timestamp NOT NULL DEFAULT now(),
-    exit_at timestamp,
+    exit_at timestamp
 );
