@@ -7,13 +7,26 @@ import (
 
 func CreateParkingLot(parkingLot *models.CreateParkingLotModel) (err error) {
 	var (
-		db    = common.Database
-		query = `INSERT INTO parking_lot_tb(name, address, max_capacity, interval, price_per_interval) VALUES ($1, $2, $3, $4, $5)`
+		db           = common.Database
+		query        = `INSERT INTO parking_lot_tb(name, address, max_capacity, interval, price_per_interval) VALUES ($1, $2, $3, $4, $5) RETURNING id`
+		parkingLotId = 0
 	)
 
-	_, err = db.Query(query, parkingLot.Name, parkingLot.Address, parkingLot.MaxCapacity, parkingLot.Interval, parkingLot.PricePerInterval)
+	rows, err := db.Query(query, parkingLot.Name, parkingLot.Address, parkingLot.MaxCapacity, parkingLot.Interval, parkingLot.PricePerInterval)
 	if err != nil {
 		return err
+	}
+
+	for rows.Next() {
+		rows.Scan(&parkingLotId)
+	}
+
+	for _, tier := range parkingLot.Tiers {
+		query = `INSERT INTO discount_tier_tb(id_parking_lot, title, discount_value) VALUES ($1, $2, $3);`
+		_, err := db.Exec(query, parkingLotId, tier.Title, tier.DiscountValue)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -40,7 +53,24 @@ func GetParkingLot(id int) (*models.ParkingLotModel, error) {
 			&res.Interval,
 			&res.PricePerInterval,
 		)
+	}
 
+	query = `SELECT id, title, discount_value FROM discount_tier_tb WHERE id_parking_lot = $1`
+	rows, err = db.Query(query, res.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		tier := &models.TierModel{IdParkingLot: res.Id}
+
+		rows.Scan(
+			&tier.Id,
+			&tier.Title,
+			&tier.DiscountValue,
+		)
+
+		res.Tiers = append(res.Tiers, tier)
 	}
 
 	return res, err

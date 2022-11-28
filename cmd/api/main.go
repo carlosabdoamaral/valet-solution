@@ -30,5 +30,9 @@ func main() {
 	parking.PUT("/update", handlers.UpdateParkingLotHandler)
 	parking.DELETE("/delete", handlers.DeleteParkingLotHandler)
 
+	tier := router.Group("/tier")
+	tier.POST("/create", handlers.CreateTiersHandler)
+	tier.DELETE("/delete", handlers.DeleteTiersHandler)
+
 	router.Run()
 }
