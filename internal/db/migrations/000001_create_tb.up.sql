@@ -2,6 +2,7 @@ CREATE TABLE parking_lot_tb(
     id SERIAL PRIMARY KEY NOT NULL,
     name VARCHAR NOT NULL,
     address VARCHAR NOT NULL,         -- zip code
+    max_value FLOAT,                 -- USD 20
     max_capacity INT,                 -- 100 cars
     interval INT NOT NULL,            -- 20 min, 60 min, ...
     price_per_interval FLOAT NOT NULL -- USD 2 * interval

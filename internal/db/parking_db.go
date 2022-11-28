@@ -8,11 +8,11 @@ import (
 func CreateParkingLot(parkingLot *models.CreateParkingLotModel) (err error) {
 	var (
 		db           = common.Database
-		query        = `INSERT INTO parking_lot_tb(name, address, max_capacity, interval, price_per_interval) VALUES ($1, $2, $3, $4, $5) RETURNING id`
+		query        = `INSERT INTO parking_lot_tb(name, address, max_capacity, max_value, interval, price_per_interval) VALUES ($1, $2, $3, $4, $5,$6) RETURNING id`
 		parkingLotId = 0
 	)
 
-	rows, err := db.Query(query, parkingLot.Name, parkingLot.Address, parkingLot.MaxCapacity, parkingLot.Interval, parkingLot.PricePerInterval)
+	rows, err := db.Query(query, parkingLot.Name, parkingLot.Address, parkingLot.MaxCapacity, parkingLot.MaxValue, parkingLot.Interval, parkingLot.PricePerInterval)
 	if err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func GetParkingLot(id int) (*models.ParkingLotModel, error) {
 	var (
 		db    = common.Database
 		res   = &models.ParkingLotModel{}
-		query = `SELECT id, name, address, max_capacity, interval, price_per_interval FROM parking_lot_tb WHERE id = $1;`
+		query = `SELECT id, name, address, max_capacity, max_value, interval, price_per_interval FROM parking_lot_tb WHERE id = $1;`
 	)
 
 	rows, err := db.Query(query, id)
@@ -50,6 +50,7 @@ func GetParkingLot(id int) (*models.ParkingLotModel, error) {
 			&res.Name,
 			&res.Address,
 			&res.MaxCapacity,
+			&res.MaxValue,
 			&res.Interval,
 			&res.PricePerInterval,
 		)
@@ -85,14 +86,15 @@ func UpdateParkingLot(parkingLot *models.ParkingLotModel) (err error) {
 			name = $1,
 			address = $2,
 			max_capacity = $3,
-			interval = $4,
-			price_per_interval = $5
+			max_value = $4,
+			interval = $5,
+			price_per_interval = $6
 		WHERE
-			id = $6
+			id = $7
 		;`
 	)
 
-	_, err = db.Query(query, parkingLot.Name, parkingLot.Address, parkingLot.MaxCapacity, parkingLot.Interval, parkingLot.PricePerInterval, parkingLot.Id)
+	_, err = db.Query(query, parkingLot.Name, parkingLot.Address, parkingLot.MaxCapacity, parkingLot.MaxValue, parkingLot.Interval, parkingLot.PricePerInterval, parkingLot.Id)
 	if err != nil {
 		return err
 	}

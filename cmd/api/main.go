@@ -29,10 +29,19 @@ func main() {
 	parking.POST("/details", handlers.GetParkingLotHandler)
 	parking.PUT("/update", handlers.UpdateParkingLotHandler)
 	parking.DELETE("/delete", handlers.DeleteParkingLotHandler)
+	parking.POST("/cars", handlers.GetCarByIdHandler)
 
 	tier := router.Group("/tier")
 	tier.POST("/create", handlers.CreateTiersHandler)
 	tier.DELETE("/delete", handlers.DeleteTiersHandler)
+
+	car := router.Group("/car")
+	car.POST("/extract", handlers.GenerateExtract)
+	car.POST("/insert", handlers.InsertCarHandler)
+	car.POST("/details", handlers.GetCarByIdHandler)
+	car.PUT("/update", handlers.UpdateCarHandler)
+	car.DELETE("/exit", handlers.RemoveCarFromParkingLotHandler)
+	car.DELETE("/delete", handlers.DeleteCarHandler)
 
 	router.Run()
 }

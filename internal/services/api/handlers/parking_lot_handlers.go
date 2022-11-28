@@ -53,6 +53,14 @@ func GetParkingLotHandler(context *gin.Context) {
 		return
 	}
 
+	cars, err := db.GetCarsFromParkingLot(id)
+	if err != nil {
+		context.IndentedJSON(http.StatusConflict, err.Error())
+		return
+	}
+
+	res.Cars = cars
+
 	context.IndentedJSON(http.StatusCreated, res)
 }
 
