@@ -37,7 +37,7 @@ func main() {
 
 	car := router.Group("/car")
 	car.POST("/extract", handlers.GenerateExtract)
-	car.POST("/insert", handlers.InsertCarHandler)
+	car.POST("/insert", handlers.InsertCarHandler) // FIX: Enviar as datas null
 	car.POST("/details", handlers.GetCarByIdHandler)
 	car.PUT("/update", handlers.UpdateCarHandler)
 	car.DELETE("/exit", handlers.RemoveCarFromParkingLotHandler)

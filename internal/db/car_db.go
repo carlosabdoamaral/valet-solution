@@ -200,7 +200,7 @@ func DeleteCar(carId *models.IdModel) error {
 		WHERE id = $1;`
 	)
 
-	_, err := db.Exec(query, carId)
+	_, err := db.Exec(query, carId.Id)
 	if err != nil {
 		return err
 	}

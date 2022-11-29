@@ -123,7 +123,7 @@ func RemoveCarFromParkingLotHandler(context *gin.Context) {
 		return
 	}
 
-	context.IndentedJSON(http.StatusCreated, "Removed")
+	context.IndentedJSON(http.StatusOK, "Removed")
 }
 
 func DeleteCarHandler(context *gin.Context) {
@@ -146,7 +146,7 @@ func DeleteCarHandler(context *gin.Context) {
 		return
 	}
 
-	context.IndentedJSON(http.StatusCreated, "Removed")
+	context.IndentedJSON(http.StatusOK, "Removed")
 }
 
 func GenerateExtract(context *gin.Context) {
