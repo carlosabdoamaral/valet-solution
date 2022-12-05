@@ -17,7 +17,7 @@ class _ControllerState extends State<Controller> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        colorScheme: ColorScheme.dark(),
+        colorScheme: const ColorScheme.dark(),
       ),
       home: TestsPage(),
     );

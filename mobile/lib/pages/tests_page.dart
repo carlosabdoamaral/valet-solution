@@ -24,14 +24,18 @@ class _TestsPageState extends State<TestsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("DEV"),
+        title: Text("TEST PAGE"),
         actions: [],
       ),
       body: SafeArea(
         child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: ListView(
-              children: [
+              children: const [
+                DefaultRowWidget(title: "TESTE", value: "VALUE"),
+                DefaultRowWidget(title: "TESTE", value: "VALUE"),
+                DefaultRowWidget(title: "TESTE", value: "VALUE"),
+                DefaultRowWidget(title: "TESTE", value: "VALUE"),
                 DefaultRowWidget(title: "TESTE", value: "VALUE"),
               ],
             )),
