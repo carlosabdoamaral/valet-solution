@@ -1,9 +1,6 @@
 api:
 	go run cmd/api/main.go
 
-rabbit:
-	go run cmd/rabbit/main.go
-
 docker:
 	cd docs/ && docker-compose up -d
 
