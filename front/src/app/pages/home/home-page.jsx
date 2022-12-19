@@ -134,7 +134,7 @@ export const HomePage = (_) => {
               getExtract();
             }}
           >
-            Text...
+            Calculate
           </Button>
         </Form>
       </div>
