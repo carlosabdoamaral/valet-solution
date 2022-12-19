@@ -16,6 +16,7 @@ export const HomePage = (_) => {
     false,
     false,
   ]);
+  const [totalParkingTime, setTotalParkingTime] = useState(null);
 
   function getExtract() {
     let ms = moment(exitAt, "HH:mm:ss").diff(moment(entranceAt, "HH:mm:ss"));
@@ -24,9 +25,11 @@ export const HomePage = (_) => {
     let minutes = date._data.minutes;
     minutes += hours * 60;
 
+    setTotalParkingTime(minutes);
+
     if (minutes <= 0) {
       setResult("Entrance must be greater than exit");
-      return
+      return;
     }
 
     let min = 0;
@@ -57,15 +60,20 @@ export const HomePage = (_) => {
     <div className="bg-light content">
       <TitleWidget title={title} />
 
-      <div className="w-75 mx-auto p-4">
+      <div className="w-100 mx-auto p-4">
         {result !== null ? (
           <div className="text-center p-5">
             {typeof result === "string" ? (
               <h1 className="text-danger">{result}</h1>
             ) : (
               <div>
-                <small className="text-muted">Value to be paid</small>
-                <h1 className="text-success">U${result}</h1>
+                <div className="my-4">
+                  <small className="text-muted">Value to be paid</small>
+                  <h1 className="text-success">U${result}</h1>
+                  <small className="text-muted fw-bold ">
+                    {totalParkingTime} minutes
+                  </small>
+                </div>
                 <small className="text-muted">
                   Payments by card: +$1,00 of convenience fee
                 </small>
@@ -126,7 +134,7 @@ export const HomePage = (_) => {
               getExtract();
             }}
           >
-            Calcular
+            Text...
           </Button>
         </Form>
       </div>
