@@ -1,16 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SpacerWidget } from "../../widgets/spacer-widget";
 import "./home-page.scss";
 import moment from "moment/moment";
-import {
-  Button,
-  Container,
-  Form,
-  Grid,
-  GridColumn,
-  Header,
-  Select,
-} from "semantic-ui-react";
+import { Button, Container, Form, Header, Select } from "semantic-ui-react";
 import { presetOptions } from "./presets";
 
 export const HomePage = (_) => {
