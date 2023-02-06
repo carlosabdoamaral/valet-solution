@@ -1,22 +1,26 @@
-import React, { useState } from "react";
-import { TitleWidget } from "../../widgets/title/title-widget";
-import { Form, Button } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { SpacerWidget } from "../../widgets/spacer-widget";
 import "./home-page.scss";
 import moment from "moment/moment";
+import {
+  Button,
+  Container,
+  Form,
+  Grid,
+  GridColumn,
+  Header,
+  Select,
+} from "semantic-ui-react";
+import { presetOptions } from "./presets";
 
 export const HomePage = (_) => {
   const title = "Valet Solution";
   const [entranceAt, setEntranceAt] = useState(null);
   const [exitAt, setExitAt] = useState(null);
   const [result, setResult] = useState(null);
-  const checksLabels = ["Starbucks Validation", "20 min", "20 min", "20 min"];
-  const [checksValues, setChecksValues] = useState([
-    false,
-    false,
-    false,
-    false,
-  ]);
   const [totalParkingTime, setTotalParkingTime] = useState(null);
+
+  const [presetToUse, setPresetToUse] = useState(presetOptions[0]);
 
   function getExtract() {
     let ms = moment(exitAt, "HH:mm:ss").diff(moment(entranceAt, "HH:mm:ss"));
@@ -24,7 +28,6 @@ export const HomePage = (_) => {
     let hours = date._data.hours;
     let minutes = date._data.minutes;
     minutes += hours * 60;
-
     setTotalParkingTime(minutes);
 
     if (minutes <= 0) {
@@ -32,20 +35,23 @@ export const HomePage = (_) => {
       return;
     }
 
-    let min = 0;
-    let max = 20;
+    let min = presetToUse.min;
+    let max = presetToUse.max;
 
-    let intervalInMinutes = 20;
-    let valuePerInterval = 4;
+    let intervalInMinutes = presetToUse.intervalInMinutes;
+    let valuePerInterval = presetToUse.valuePerInterval;
 
     let intervals = Math.ceil(minutes / intervalInMinutes);
     let finalValue = intervals * valuePerInterval;
 
-    checksValues.forEach((isTrue) => {
-      if (isTrue) {
-        finalValue = finalValue - 4;
+    let valueToRemoveWithValidation = 0;
+    presetToUse.validations.forEach((v, i) => {
+      if (v.isActive) {
+        valueToRemoveWithValidation += v.valueToRemove;
       }
     });
+
+    finalValue = finalValue - valueToRemoveWithValidation;
 
     if (finalValue >= max) {
       finalValue = max;
@@ -56,88 +62,177 @@ export const HomePage = (_) => {
     setResult(finalValue);
   }
 
-  return (
-    <div className="bg-light content">
-      <TitleWidget title={title} />
+  function renderTitle() {
+    return (
+      <Header as="h1" textAlign="center">
+        {title}
+      </Header>
+    );
+  }
 
-      <div className="w-100 mx-auto p-4">
-        {result !== null ? (
-          <div className="text-center p-5">
-            {typeof result === "string" ? (
-              <h1 className="text-danger">{result}</h1>
-            ) : (
-              <div>
-                <div className="my-4">
-                  <small className="text-muted">Value to be paid</small>
-                  <h1 className="text-success">U${result}</h1>
-                  <small className="text-muted fw-bold ">
-                    {totalParkingTime} minutes
-                  </small>
-                </div>
-                <small className="text-muted">
-                  Payments by card: +$1,00 of convenience fee
-                </small>
-              </div>
-            )}
-          </div>
-        ) : null}
+  function renderResult() {
+    return (
+      <>
+        {typeof result === "string" ? (
+          <Header as={"h3"} textAlign="center">
+            {result}
+          </Header>
+        ) : (
+          <Container>
+            <>
+              <Header textAlign="center">
+                <Header.Subheader>Value to be paid</Header.Subheader>
+              </Header>
 
-        <Form>
-          <Form.Group className="mb-3">
-            <Form.Label>Entrance</Form.Label>
-            <Form.Control
-              type="time"
-              placeholder="entrada"
-              onChange={(e) => {
-                setEntranceAt(e.target.value);
-              }}
-            />
-          </Form.Group>
+              <Header
+                textAlign="center"
+                style={{
+                  fontSize: "3rem",
+                  color: `${presetToUse.resultColor}`,
+                }}
+              >
+                U${result}
+              </Header>
+              <Header textAlign="center">{totalParkingTime} minutes</Header>
+            </>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Exit</Form.Label>
-            <Form.Control
-              type="time"
-              placeholder="saida"
-              onChange={(e) => {
-                setExitAt(e.target.value);
-              }}
-            />
-          </Form.Group>
+            <Header textAlign="center">
+              <Header.Subheader>
+                Payments by card: +$1,00 of convenience fee
+              </Header.Subheader>
+            </Header>
+          </Container>
+        )}
+      </>
+    );
+  }
 
-          {checksLabels.map((label, i) => (
+  function renderDateFilterArea() {
+    return (
+      <Container>
+        <Form.Input
+          type="time"
+          label="Entrance"
+          placeholder="Entrance"
+          value={entranceAt}
+          onChange={(e) => {
+            setEntranceAt(e.target.value);
+          }}
+        />
+
+        <Form.Input
+          type="time"
+          placeholder="saida"
+          label="Exit"
+          onChange={(e) => {
+            setExitAt(e.target.value);
+          }}
+        />
+      </Container>
+    );
+  }
+
+  function renderValidationFilterArea() {
+    return (
+      <>
+        {presetToUse.validations.map((v, i) => (
+          <>
+            <SpacerWidget height={10} />
             <Form.Group className="mb-3" key={i}>
-              <Form.Check
+              <Form.Checkbox
                 type="checkbox"
                 defaultChecked={false}
-                value={checksValues[i]}
-                onChange={() => {
-                  let newList = checksValues;
-
-                  checksValues.forEach((check, k) => {
-                    if (k === i) {
-                      newList[k] = !newList[k];
-                    }
-                  });
-
-                  setChecksValues(newList);
+                value={v.name}
+                label={v.name}
+                onChange={(ev, data) => {
+                  handleCheckValidation(ev, data, v);
                 }}
-                label={label}
               />
             </Form.Group>
-          ))}
-          <Button
-            className="w-100 mt-5"
-            variant="dark"
-            type="button"
-            onClick={() => {
-              getExtract();
-            }}
-          >
-            Calculate
-          </Button>
-        </Form>
-      </div>
-    </div>
+          </>
+        ))}
+      </>
+    );
+  }
+
+  function renderSubmitButton() {
+    return (
+      <Button
+        fluid
+        type="button"
+        color="black"
+        onClick={() => {
+          getExtract();
+        }}
+      >
+        Calculate
+      </Button>
+    );
+  }
+
+  function renderForm() {
+    return (
+      <Form>
+        {renderDateFilterArea()}
+        {renderValidationFilterArea()}
+      </Form>
+    );
+  }
+
+  function handleCheckValidation(ev, data, validation) {
+    setPresetToUse((prev) => {
+      let newValidationState = [];
+
+      prev.validations.forEach((v, i) => {
+        if (v.key === validation.key) {
+          newValidationState.push({
+            ...v,
+            isActive: data.checked,
+          });
+        } else {
+          newValidationState.push(v);
+        }
+      });
+
+      return { ...prev, validations: newValidationState };
+    });
+  }
+
+  function handleChangePreset(ev, data) {
+    setPresetToUse(() => {
+      let newPresetToUse = presetOptions.filter(
+        (preset) => preset.value === data.value
+      );
+
+      return newPresetToUse[0];
+    });
+  }
+
+  return (
+    <Container>
+      <SpacerWidget height={50} />
+      {renderTitle()}
+
+      <>
+        <SpacerWidget height={20} />
+        {result !== null && renderResult()}
+        <SpacerWidget height={20} />
+
+        <Select
+          fluid
+          options={presetOptions}
+          placeholder={"Select preset"}
+          onChange={handleChangePreset}
+        />
+
+        <SpacerWidget height={10} />
+
+        {renderForm()}
+
+        <SpacerWidget height={50} />
+
+        {renderSubmitButton()}
+      </>
+    </Container>
   );
 };
