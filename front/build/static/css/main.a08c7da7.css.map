@@ -1,1 +1,1 @@
-{"version":3,"file":"static/css/main.a08c7da7.css","mappings":"AAAA,SAEI,aADA,WACA","sources":["app/pages/home/home-page.scss"],"sourcesContent":[".content {\n    width: 100vw;\n    height: 100vh;\n}"],"names":[],"sourceRoot":""}
+{"version":3,"file":"static/css/main.a08c7da7.css","mappings":"AAAA,SAEE,aADA,WACA","sources":["app/pages/home/home-page.scss"],"sourcesContent":[".content {\n  width: 100vw;\n  height: 100vh;\n}\n"],"names":[],"sourceRoot":""}
