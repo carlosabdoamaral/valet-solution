@@ -1,6 +1,0 @@
-[*] github.com/gin-gonic/gin
-[*] database/sql
-[*] github.com/lib/pq
-[*] github.com/streadway/amqp
-[*] github.com/joho/godotenv
-[*] github.com/stretchr/testify/assert
