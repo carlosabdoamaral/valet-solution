@@ -164,10 +164,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 padding: const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
                 child: DropdownButton<String>(
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                   items: parkingLotsPresets.map((ParkingLot parkingLot) {
                     return DropdownMenuItem<String>(
                       value: parkingLot.name,
