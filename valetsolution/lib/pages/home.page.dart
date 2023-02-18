@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:valetsolution/common/data.mock.dart';
 import 'package:valetsolution/common/shortcuts.dart';
+import 'package:valetsolution/modal/swap_parkinglot.dart';
+import 'package:valetsolution/model/parkinglot.dart';
+import 'package:valetsolution/model/user.dart';
 import 'package:valetsolution/widgets/sales_report_row.widget.dart';
 import 'package:valetsolution/widgets/shortcut.widget.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +21,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   void goToReportsPage() {
     Navigator.pushNamed(context, '/reports');
+  }
+
+  void openToSwapParkingLotModal() {
+    showModalBottomSheet<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return const SwapParkingLotModal();
+        });
   }
 
   List<ShortcutWidget> shortcutsFiltered() {
@@ -33,6 +46,18 @@ class _HomePageState extends State<HomePage> {
     return arr;
   }
 
+  String getSalutMessage() {
+    DateTime now = DateTime.now();
+
+    if (now.hour >= 5 && now.hour <= 12) {
+      return "Good morning,";
+    } else if (now.hour >= 13 && now.hour <= 18) {
+      return "Good evening,";
+    } else {
+      return "Good night,";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +69,8 @@ class _HomePageState extends State<HomePage> {
             Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(50),
+                  bottomRight: Radius.circular(30),
+                  bottomLeft: Radius.circular(30),
                 ),
                 gradient: LinearGradient(
                   colors: [
@@ -65,25 +91,33 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           const Spacer(),
                           GestureDetector(
+                            onTap: openToSwapParkingLotModal,
+                            child: const Icon(
+                              Icons.swap_vert,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                          GestureDetector(
                             onTap: goToReportsPage,
                             child: const Icon(
                               Icons.attach_money,
                               color: Colors.white,
                               size: 30,
                             ),
-                          )
+                          ),
                         ],
                       ),
                       const SizedBox(height: 30),
                       Text(
-                        "Good morning,",
+                        getSalutMessage(),
                         style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 15,
                         ),
                       ),
                       Text(
-                        "Carlos Amaral",
+                        userMockData.name,
                         style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 20,

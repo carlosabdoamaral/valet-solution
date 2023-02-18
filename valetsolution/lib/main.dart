@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:valetsolution/pages/calculator.page.dart';
 import 'package:valetsolution/pages/home.page.dart';
 import 'package:valetsolution/pages/reports.page.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         '/reports': (context) => const ReportsPage(),
       },
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const CalculatorPage(),
     );
   }
 }

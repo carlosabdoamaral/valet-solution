@@ -20,10 +20,6 @@ List<ShortcutWidget> shortcuts = [
     onTap: () {},
     color: Colors.grey,
   ),
-
-//
-//
-//
   ShortcutWidget(
     title: "Some title",
     subtitle: "subtitle",
