@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:valetsolution/model/parkinglot.dart';
 
 DateTime parseHHMMToDateTime(String s) {
@@ -42,11 +40,11 @@ CalculatorResultModel? calculateResult(CalculatorParamsModel params) {
   double valuePerInterval = params.parkingLot.valuePerInterval;
 
   double valueToRemoveWithValidation = 0;
-  params.validations.forEach((validation) {
+  for (var validation in params.validations) {
     if (validation.isActive == true) {
       valueToRemoveWithValidation += validation.valueToRemove;
     }
-  });
+  }
 
   double intervals = (diffInMinutes / intervalInMinutes).ceilToDouble();
   double finalValue = intervals * valuePerInterval;

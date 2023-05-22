@@ -11,7 +11,8 @@ UserModel userMockData = UserModel(
 
 List<ParkingLot> parkingLotsPresets = [
   ParkingLot(
-    0, "Starbucks",
+    0,
+    "Starbucks",
     const Color.fromRGBO(0, 156, 0, 1), // TODO -> Mudar para #206E14
     0,
     20,

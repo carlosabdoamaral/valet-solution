@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:valetsolution/model/parkinglot.dart';
 
@@ -28,11 +26,18 @@ class _CalculatorResultModalState extends State<CalculatorResultModal> {
         children: <Widget>[
           const Spacer(),
           Text(
-            'Valet Solution',
+            "Using",
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: 13,
+            ),
+          ),
+          Text(
+            widget.result.parkingLot.name,
             style: GoogleFonts.poppins(
               color: Colors.black,
               fontWeight: FontWeight.w600,
-              fontSize: 20,
+              fontSize: 25,
             ),
           ),
           Padding(

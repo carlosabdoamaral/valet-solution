@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class SalesReportRowWidget extends StatefulWidget {
-  const SalesReportRowWidget(
-      {super.key,
-      required this.plate,
-      required this.value,
-      required this.date});
+  const SalesReportRowWidget({
+    super.key,
+    required this.plate,
+    required this.value,
+    required this.date,
+  });
 
   final String plate;
   final double value;

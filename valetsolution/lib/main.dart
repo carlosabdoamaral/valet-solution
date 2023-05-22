@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:valetsolution/pages/calculator.page.dart';
-import 'package:valetsolution/pages/home.page.dart';
-import 'package:valetsolution/pages/reports.page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,13 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        '/home': (context) => const HomePage(),
-        '/reports': (context) => const ReportsPage(),
-      },
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const CalculatorPage(),
+      home: CalculatorPage(),
     );
   }
 }

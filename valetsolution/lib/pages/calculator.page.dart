@@ -159,26 +159,59 @@ class _CalculatorPageState extends State<CalculatorPage> {
           child: Column(
             children: [
               const SizedBox(height: 16),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.all(16),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: DropdownButton<String>(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  items: parkingLotsPresets.map((ParkingLot parkingLot) {
-                    return DropdownMenuItem<String>(
-                      value: parkingLot.name,
-                      child: Text(
-                        parkingLot.name,
-                        style: GoogleFonts.poppins(),
+              // Container(
+              //   width: MediaQuery.of(context).size.width,
+              //   padding: const EdgeInsets.all(16),
+              //   decoration: const BoxDecoration(
+              //     color: Colors.white,
+              //     borderRadius: BorderRadius.all(Radius.circular(10)),
+              //   ),
+              //   child: DropdownButton<String>(
+              //     borderRadius: const BorderRadius.all(Radius.circular(10)),
+              //     items: parkingLotsPresets.map((ParkingLot parkingLot) {
+              //       return DropdownMenuItem<String>(
+              //         value: parkingLot.name,
+              //         child: Text(
+              //           parkingLot.name,
+              //           style: GoogleFonts.poppins(),
+              //         ),
+              //       );
+              //     }).toList(),
+              //     value: parkingLotSelected.name,
+              //     onChanged: updateParkingLotInputValue,
+              //   ),
+              // ),
+              SingleChildScrollView(
+                child: Row(
+                  children: [
+                    for (var p in parkingLotsPresets)
+                      GestureDetector(
+                        onTap: () {
+                          updateParkingLotInputValue(p.name);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            color: parkingLotSelected.name == p.name
+                                ? Colors.white
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            p.name,
+                            style: GoogleFonts.poppins(
+                              color: parkingLotSelected.name == p.name
+                                  ? Colors.black
+                                  : Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
-                    );
-                  }).toList(),
-                  value: parkingLotSelected.name,
-                  onChanged: updateParkingLotInputValue,
+                  ],
                 ),
               ),
               const SizedBox(height: 20),
