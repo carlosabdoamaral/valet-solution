@@ -1,4 +1,4 @@
-const starbucksPreset = {
+export const starbucksPreset = {
   key: "Starbucks",
   text: "Starbucks",
   value: "Starbucks",
