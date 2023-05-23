@@ -1,10 +1,11 @@
-const starbucksPreset = {
+export const starbucksPreset = {
+  id: 1,
   key: "Starbucks",
   text: "Starbucks",
   value: "Starbucks",
   resultColor: "#206E14",
   min: 0,
-  max: 20,
+  max: 25,
   intervalInMinutes: 20,
   valuePerInterval: 4,
   validations: [
@@ -36,6 +37,7 @@ const starbucksPreset = {
 };
 
 const deliPreset = {
+  id: 2,
   name: "Deli",
   text: "Deli",
   value: "Deli",
@@ -60,4 +62,28 @@ const deliPreset = {
   ],
 };
 
-export const presetOptions = [starbucksPreset, deliPreset];
+const southBeverlyGrillPreset = {
+  id: 3,
+  name: "South Beverly Grill",
+  text: "South Beverly Grill",
+  value: "South Beverly Grill",
+  resultColor: "#7B1B13",
+  min: 10,
+  max: 25,
+  intervalInMinutes: 15,
+  valuePerInterval: 5,
+  validations: [
+    {
+      key: 0,
+      name: "Validation",
+      isActive: false,
+      valueToRemove: 0,
+    },
+  ],
+};
+
+export const presetOptions = [
+  starbucksPreset,
+  deliPreset,
+  southBeverlyGrillPreset,
+];
