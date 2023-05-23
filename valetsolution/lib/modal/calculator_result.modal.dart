@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:valetsolution/common/utils.dart';
 import 'package:valetsolution/model/parkinglot.dart';
 
 class CalculatorResultModal extends StatefulWidget {
@@ -15,6 +16,14 @@ class CalculatorResultModal extends StatefulWidget {
 }
 
 class _CalculatorResultModalState extends State<CalculatorResultModal> {
+  String getDateDiffInHours() {
+    DateTime sd = ParseHHMMToDateTime(widget.result.startDate);
+    DateTime ed = ParseHHMMToDateTime(widget.result.endDate);
+
+    Duration diff = ed.difference(sd);
+    return diff.inHours.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,7 +52,7 @@ class _CalculatorResultModalState extends State<CalculatorResultModal> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              '${widget.result.startDate} - ${widget.result.endDate}',
+              "${getDateDiffInHours()} hours",
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 color: Colors.black54,
