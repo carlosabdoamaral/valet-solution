@@ -42,8 +42,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
       showAlertDialog("Error", "Start date and/or End date mustn't be empty");
       return;
     }
-    DateTime sd = parseHHMMToDateTime(startDate.text);
-    DateTime ed = parseHHMMToDateTime(endDate.text);
+    DateTime sd = ParseHHMMToDateTime(startDate.text);
+    DateTime ed = ParseHHMMToDateTime(endDate.text);
 
     Duration diff = ed.difference(sd);
     int diffInMinutes = diff.inMinutes;
@@ -159,29 +159,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
           child: Column(
             children: [
               const SizedBox(height: 16),
-              // Container(
-              //   width: MediaQuery.of(context).size.width,
-              //   padding: const EdgeInsets.all(16),
-              //   decoration: const BoxDecoration(
-              //     color: Colors.white,
-              //     borderRadius: BorderRadius.all(Radius.circular(10)),
-              //   ),
-              //   child: DropdownButton<String>(
-              //     borderRadius: const BorderRadius.all(Radius.circular(10)),
-              //     items: parkingLotsPresets.map((ParkingLot parkingLot) {
-              //       return DropdownMenuItem<String>(
-              //         value: parkingLot.name,
-              //         child: Text(
-              //           parkingLot.name,
-              //           style: GoogleFonts.poppins(),
-              //         ),
-              //       );
-              //     }).toList(),
-              //     value: parkingLotSelected.name,
-              //     onChanged: updateParkingLotInputValue,
-              //   ),
-              // ),
               SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
                     for (var p in parkingLotsPresets)
