@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Enter in frontend folder
-        run: cd frontend/
+        run: cd ./frontend/
 
       - name: Checkout repository
         uses: actions/checkout@v2
