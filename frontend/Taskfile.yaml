@@ -1,0 +1,9 @@
+version: "3"
+
+tasks:
+  deploy:
+    cmds:
+      - rm -rf build
+      - yarn
+      - yarn build
+      - firebase deploy
