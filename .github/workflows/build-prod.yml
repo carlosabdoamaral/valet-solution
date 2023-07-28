@@ -1,4 +1,4 @@
-name: Build
+name: Set environment tag
 
 on:
   push:
