@@ -1,5 +1,5 @@
 import { Container, Grid } from "semantic-ui-react";
-import { ParkingLot } from "../../interfaces/parking-lot";
+import { ParkingLot } from "../../../interfaces/parking-lot";
 
 export interface RenderPresetsProps {
   presets: ParkingLot[];

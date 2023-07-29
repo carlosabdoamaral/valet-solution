@@ -1,10 +1,10 @@
 import { Button, Container, Icon } from "semantic-ui-react";
-import { CalculatorResult } from "../../interfaces/calculator-result";
-import { southBeverlyGrillCalculator } from "../../utils/calculator/south-beverly-grill";
-import { getDiffInHours, hourAndHalf, twoHours } from "../../utils/time";
-import { Spacer } from "../../components/spacer";
-import { SouthBeverlyGrillPreset } from "../../interfaces/south-beverly-grill";
-import { SaveResult } from "../../http/save-result";
+import { CalculatorResult } from "../../../interfaces/calculator-result";
+import { southBeverlyGrillCalculator } from "../../../utils/calculator/south-beverly-grill";
+import { getDiffInHours, hourAndHalf, twoHours } from "../../../utils/time";
+import { Spacer } from "../../../components/spacer";
+import { SouthBeverlyGrillPreset } from "../../../interfaces/south-beverly-grill";
+import { SaveResult } from "../../../http/save-result";
 
 export interface RenderOffCanvasProps {
   result: CalculatorResult | undefined;
