@@ -10,13 +10,12 @@ export const RenderPresets = (props: RenderPresetsProps) => {
   return (
     <Grid columns={2} className="cell-list">
       {props.presets.map((preset, i) => (
-        <Grid.Column className="p-2">
+        <Grid.Column className="p-2" key={i}>
           <Container
             onClick={() => {
               props.activatePresetByID(i);
             }}
             className={preset.active ? "cell active" : "cell disabled"}
-            key={i}
           >
             {preset.name}
           </Container>
