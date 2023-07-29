@@ -1,8 +1,6 @@
-import moment from "moment";
 import { CalculatorResult } from "../../interfaces/calculator-result";
 import { getDiffInMinutes } from "../time";
 import { CalculatorHandlerProps } from "./handler";
-import { DateFormats } from "../date-formats";
 
 export function defaultCalculator(
   props: CalculatorHandlerProps
@@ -24,8 +22,8 @@ export function defaultCalculator(
 
   return {
     parkingLot: props.parkingLot,
-    startTime: moment(props.startTime).format(DateFormats.TIME),
-    endTime: moment(props.endTime).format(DateFormats.TIME),
+    startTime: props.startTime,
+    endTime: props.endTime,
     discount: discount,
     amount: amount,
   };

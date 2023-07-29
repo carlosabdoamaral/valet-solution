@@ -34,8 +34,8 @@ export function CalculatorView() {
   const [presets, setPresets] = useState(presetsInitialState);
   const [mustShowOffCanvas, setMustShowOffCanvas] = useState(true);
 
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [startTime, setStartTime] = useState("10:00");
+  const [endTime, setEndTime] = useState("12:00");
 
   const [result, setResult] = useState<CalculatorResult>();
   const [dummy, setDummy] = useState(false);
@@ -95,26 +95,26 @@ export function CalculatorView() {
   const activePreset = getActivePreset();
   useEffect(() => {
     if (!!startTime && !!endTime) {
+      let _result = null;
+
       if (activePreset.name === SouthBeverlyGrillPreset.name) {
-        setResult(
-          southBeverlyGrillCalculator(
-            {
-              parkingLot: activePreset,
-              startTime: startTime,
-              endTime: endTime,
-            },
-            twoHours
-          )
-        );
-      } else {
-        setResult(
-          defaultCalculator({
+        _result = southBeverlyGrillCalculator(
+          {
             parkingLot: activePreset,
             startTime: startTime,
             endTime: endTime,
-          })
+          },
+          twoHours
         );
+      } else {
+        _result = defaultCalculator({
+          parkingLot: activePreset,
+          startTime: startTime,
+          endTime: endTime,
+        });
       }
+
+      setResult(_result);
     }
   }, [presets, startTime, endTime, dummy, activePreset]);
 

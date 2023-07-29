@@ -12,13 +12,12 @@ export const RenderValidations = (props: RenderValidationsProps) => {
         .filter((p) => p.active)
         .map((p) =>
           p.validations.map((v, i) => (
-            <Grid.Column className="p-2">
+            <Grid.Column className="p-2" key={i}>
               <Container
                 className={v.active ? "cell active" : "cell disabled"}
                 onClick={() => {
                   props.activateValidationByID(i);
                 }}
-                key={i}
               >
                 {v.name}
               </Container>
