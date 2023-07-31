@@ -9,7 +9,15 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Accordion, Card, Container, Grid, Icon } from "semantic-ui-react";
+import {
+  Accordion,
+  Button,
+  Card,
+  Container,
+  Grid,
+  Icon,
+  Table,
+} from "semantic-ui-react";
 import { DateFormats } from "../../utils/date-formats";
 import {
   SaveResultModel,
@@ -19,8 +27,33 @@ import { CalculatorHandler } from "../../utils/calculator/handler";
 import { StarbucksPreset } from "../../interfaces/starbucks";
 import { PromenadePreset } from "../../interfaces/promenade";
 import { SouthBeverlyGrillPreset } from "../../interfaces/south-beverly-grill";
+import { db } from "../../http/firebase";
+import { FetchResult } from "../../http/fetch-result";
 
 export function DashboardView() {
+  const USE_MOCK = false;
+  const [data, setData] = useState<SaveResultModel[]>([]);
+
+  const dataFormatted = Object.values(data).map((v, i) => {
+    return [
+      i,
+      v.parkinglot.name,
+      moment(v.created_at).format(DateFormats.DATE),
+      `${v.summary.start} - ${v.summary.end}`,
+      toAmount(v.summary.amount),
+      v.summary.discount,
+    ];
+  });
+
+  const columns = [
+    "Id",
+    "Parkinlot",
+    "Date",
+    "Parked time",
+    "Amount",
+    "Discount",
+  ];
+
   function generateMock(): SaveResultModel[] {
     let arr: SaveResultModel[] = [];
 
@@ -40,7 +73,7 @@ export function DashboardView() {
       let presetToUse = presets[Math.floor(Math.random() * presets.length)];
 
       let dt = new Date();
-      dt.setDate(i);
+      // dt.setDate(i);
 
       let res = CalculatorHandler({
         parkingLot: presetToUse,
@@ -56,28 +89,42 @@ export function DashboardView() {
 
     return arr;
   }
-  const [data, setData] = useState<SaveResultModel[]>(generateMock());
-  const [activeIndex, setActiveIndex] = useState<number>(0);
 
-  const handleAccordionClick = (index: number) => {
-    const newIndex = activeIndex === index ? -1 : index;
-    setActiveIndex(newIndex);
-  };
+  function toAmount(s: number): string {
+    return s.toLocaleString("en-IN", {
+      maximumSignificantDigits: 3,
+      style: "currency",
+      currency: "USD",
+    });
+  }
 
-  useEffect(() => {
-    document.title = "Dashboard";
-  }, []);
+  function handleExportCSV(headers: string[], content: any[]) {
+    let csv = `${headers}\n`;
+    content.forEach((row) => {
+      csv += row.join(",");
+      csv += "\n";
+    });
 
-  return (
-    <Container style={{ marginTop: "80px" }}>
-      <h1 style={{ fontSize: "3rem", marginBottom: "30px" }}>Dashboard</h1>
+    let hiddenElement = document.createElement("a");
+    hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+    hiddenElement.target = "_blank";
 
+    //provide the name for the CSV file to be downloaded
+    hiddenElement.download = "ValetSolutionHistoric.csv";
+    hiddenElement.click();
+  }
+
+  function renderChart(data: SaveResultModel[]) {
+    return (
       <Container
         style={{
           background: "#e6e6e6",
-          borderRadius: "10px",
-          marginTop: "30px",
           padding: "2em",
+          borderRadius: "10px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <ResponsiveContainer width="100%" height={200}>
@@ -87,7 +134,7 @@ export function DashboardView() {
             data={data}
             style={{ marginRight: "60px" }}
           >
-            <CartesianGrid strokeDasharray="4 4" />
+            <CartesianGrid strokeDasharray="1 1" />
             <XAxis dataKey="created_at" />
             <YAxis />
             <Tooltip />
@@ -100,12 +147,128 @@ export function DashboardView() {
           </LineChart>
         </ResponsiveContainer>
       </Container>
+    );
+  }
 
-      <Accordion styled fluid style={{ marginTop: "30px" }}>
-        {/* {Object.entries(generateMock()).map((e, i) => (
-          
-        ))} */}
-      </Accordion>
+  function renderTable(data: SaveResultModel[]) {
+    return (
+      <div style={{ marginTop: "30px" }}>
+        <Table striped>
+          <Table.Body>
+            {dataFormatted.map((e) => (
+              <Table.Row>
+                {e.map((item) => (
+                  <Table.Cell active>
+                    <p style={{ color: "#0008" }}>{item}</p>
+                  </Table.Cell>
+                ))}
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </div>
+    );
+  }
+
+  function renderTopChartData(data: SaveResultModel[]) {
+    function getGridMap(data: SaveResultModel[]): Object {
+      let baseGridMap = {
+        "Total amount": 0,
+        "Total of Cars": data.length,
+        "Most lucrative parkinglot": "",
+      };
+
+      let parkingLotsCounter = {
+        Starbucks: 0.0,
+        Promenade: 0.0,
+        "South Beverly Grill": 0.0,
+      };
+
+      let starbucks = StarbucksPreset.name.toUpperCase();
+      let promenade = PromenadePreset.name.toUpperCase();
+      let southBeverlyGrill = SouthBeverlyGrillPreset.name.toUpperCase();
+
+      data.forEach((row, index) => {
+        baseGridMap["Total amount"] += row.summary.amount;
+
+        if (row.parkinglot.name.toUpperCase() === starbucks.toUpperCase()) {
+          parkingLotsCounter.Starbucks += row.summary.amount;
+        } else if (
+          row.parkinglot.name.toUpperCase() === promenade.toUpperCase()
+        ) {
+          parkingLotsCounter.Promenade += row.summary.amount;
+        } else if (
+          row.parkinglot.name.toUpperCase() === southBeverlyGrill.toUpperCase()
+        ) {
+          parkingLotsCounter["South Beverly Grill"] += row.summary.amount;
+        }
+      });
+
+      baseGridMap["Most lucrative parkinglot"] =
+        Object.entries(parkingLotsCounter).sort()[2][0];
+
+      return {
+        ...baseGridMap,
+        "Total amount": toAmount(baseGridMap["Total amount"]),
+      };
+    }
+
+    return (
+      <Grid columns={3}>
+        {Object.entries(getGridMap(data)).map((e) => (
+          <Grid.Column>
+            <div
+              style={{
+                textAlign: "center",
+                margin: "0",
+                background: "#e6e6e6",
+                color: "#0008",
+                borderRadius: "10px",
+                marginBottom: "30px",
+                padding: "40px 0",
+              }}
+            >
+              <h1>{e[1].toString()}</h1>
+              <p>{e[0].toString()}</p>
+            </div>
+          </Grid.Column>
+        ))}
+      </Grid>
+    );
+  }
+
+  useEffect(() => {
+    document.title = "Dashboard";
+
+    if (USE_MOCK) {
+      setData(generateMock());
+    } else {
+      FetchResult().then((res) => setData(res));
+    }
+  }, []);
+
+  return (
+    <Container style={{ marginTop: "80px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "30px",
+        }}
+      >
+        <h1 style={{ fontSize: "3rem", marginBottom: "30px" }}>Dashboard</h1>
+        <Button
+          color="green"
+          onClick={() => {
+            handleExportCSV(columns, dataFormatted);
+          }}
+        >
+          Export to CSV
+        </Button>
+      </div>
+      {renderTopChartData(data)}
+      {renderChart(data)}
+      {renderTable(data)}
     </Container>
   );
 }
