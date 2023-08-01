@@ -31,7 +31,7 @@ import { db } from "../../http/firebase";
 import { FetchResult } from "../../http/fetch-result";
 
 export function DashboardView() {
-  const USE_MOCK = false;
+  const USE_MOCK = true;
   const [data, setData] = useState<SaveResultModel[]>([]);
 
   const dataFormatted = Object.values(data).map((v, i) => {
@@ -76,6 +76,7 @@ export function DashboardView() {
       // dt.setDate(i);
 
       let res = CalculatorHandler({
+        licensePlate: "teste",
         parkingLot: presetToUse,
         startTime: dateRangeToUse[0],
         endTime: dateRangeToUse[1],

@@ -34,8 +34,9 @@ export function CalculatorView() {
   const [presets, setPresets] = useState(presetsInitialState);
   const [mustShowOffCanvas, setMustShowOffCanvas] = useState(true);
 
-  const [startTime, setStartTime] = useState("10:00");
-  const [endTime, setEndTime] = useState("12:00");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [licensePlate, setLicensePlate] = useState("");
 
   const [result, setResult] = useState<CalculatorResult>();
   const [dummy, setDummy] = useState(false);
@@ -75,6 +76,7 @@ export function CalculatorView() {
   const reset = () => {
     setStartTime("");
     setEndTime("");
+    setLicensePlate("");
 
     const presetsReseted = presets.map((parking, i) => {
       return {
@@ -100,6 +102,7 @@ export function CalculatorView() {
       if (activePreset.name === SouthBeverlyGrillPreset.name) {
         _result = southBeverlyGrillCalculator(
           {
+            licensePlate: licensePlate,
             parkingLot: activePreset,
             startTime: startTime,
             endTime: endTime,
@@ -108,6 +111,7 @@ export function CalculatorView() {
         );
       } else {
         _result = defaultCalculator({
+          licensePlate: licensePlate,
           parkingLot: activePreset,
           startTime: startTime,
           endTime: endTime,
@@ -137,6 +141,7 @@ export function CalculatorView() {
           setResult: setResult,
           startTime: startTime,
           endTime: endTime,
+          licensePlate: licensePlate,
           beverlyHoursToUse: beverlyHoursToUse,
           setBeverlyHoursToUse: setBeverlyHoursToUse,
           getActivePreset: getActivePreset,
@@ -154,6 +159,8 @@ export function CalculatorView() {
           setStartTime: setStartTime,
           endTime: endTime,
           setEndTime: setEndTime,
+          licensePlate: licensePlate,
+          setLicensePlate: setLicensePlate,
         })}
 
         {RenderValidations({

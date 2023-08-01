@@ -12,6 +12,7 @@ export interface RenderOffCanvasProps {
 
   startTime: string;
   endTime: string;
+  licensePlate: string;
 
   beverlyHoursToUse: number;
   setBeverlyHoursToUse: Function;
@@ -43,7 +44,15 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
         : `: $${props.result?.discount || 0}`,
     ];
 
-    let res: string[][] = [preset, parkingTime, totalParkedTime, discount];
+    const licensePlate = ["License plate: ", props.licensePlate];
+
+    let res: string[][] = [
+      preset,
+      parkingTime,
+      totalParkedTime,
+      discount,
+      licensePlate,
+    ];
 
     return res;
   };
@@ -72,7 +81,7 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
             if (!!props.result) SaveResult(props.result);
           }}
         >
-          Armazenar resultado
+          Save result
         </Button>
       </div>
     );
@@ -97,6 +106,7 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
           props.setResult(
             southBeverlyGrillCalculator(
               {
+                licensePlate: props.licensePlate,
                 parkingLot: props.getActivePreset(),
                 startTime: props.startTime,
                 endTime: props.endTime,
