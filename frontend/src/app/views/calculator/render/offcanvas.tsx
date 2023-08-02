@@ -5,6 +5,7 @@ import { getDiffInHours, hourAndHalf, twoHours } from "../../../utils/time";
 import { Spacer } from "../../../components/spacer";
 import { SouthBeverlyGrillPreset } from "../../../interfaces/south-beverly-grill";
 import { SaveResult } from "../../../http/save-result";
+import { SetStateAction } from "react";
 
 export interface RenderOffCanvasProps {
   result: CalculatorResult | undefined;
@@ -21,6 +22,8 @@ export interface RenderOffCanvasProps {
 
   mustShowOffCanvas: boolean;
   setMustShowOffCanvas: Function;
+
+  setIsLoading: Function;
 }
 
 export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
@@ -78,7 +81,9 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
             backgroundImage: "linear-gradient(to right, #62C1FC , #7879E2)",
           }}
           onClick={() => {
-            if (!!props.result) SaveResult(props.result);
+            if (!!props.result) {
+              SaveResult(props.result, props.setIsLoading);
+            }
           }}
         >
           Save result

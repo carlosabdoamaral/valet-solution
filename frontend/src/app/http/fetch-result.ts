@@ -1,4 +1,4 @@
-import { QuerySnapshot, collection, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 import { SaveResultModel } from "../interfaces/save-result";
 

@@ -15,8 +15,8 @@ export const RenderInputs = (props: RenderInputsProps) => {
   return (
     <>
       <Form.Input
-        placeholder={"xyz"}
-        required
+        placeholder={"License plate"}
+        maxLength={3}
         type="text"
         label="License plase"
         value={props.licensePlate}

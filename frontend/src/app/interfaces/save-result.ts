@@ -7,19 +7,13 @@ export interface SaveResultValidationModel {
 }
 
 export interface SaveResultModel {
-    summary: {
-        start: string,
-        end: string,
-        amount: number,
-        discount: number,
-        validations_used: SaveResultValidationModel[] | string[],
-    }
-
-    parkinglot: {
-        key: number,
-        name: string
-    }
-
+    license_plate: string,
+    parkinglot: string,
+    start: string,
+    end: string,
+    amount: number | string,
+    discount: number,
+    validations_used: SaveResultValidationModel[] | string[],
     created_at: Date,
 }
 
@@ -33,18 +27,16 @@ export function fromCalculatorResultToSaveResult(props: CalculatorResult): SaveR
     })
 
     return {
-        summary: {
-            start: props.startTime,
-            end: props.endTime,
-            amount: props.amount,
-            discount: props.discount,
-            validations_used: !!validationsUsed ? validationsUsed : ["No validations used"],
-        },
+        license_plate: props.licensePlate,
+        parkinglot: props.parkingLot.name,
 
-        parkinglot: {
-            key: props.parkingLot.id,
-            name: props.parkingLot.name
-        },
+        start: props.startTime,
+        end: props.endTime,
+
+        amount: props.amount,
+        discount: props.discount,
+
+        validations_used: !!validationsUsed ? validationsUsed : ["No validations were used"],
 
         created_at: new Date(),
     }

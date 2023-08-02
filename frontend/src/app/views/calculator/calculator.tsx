@@ -1,4 +1,4 @@
-import { Container, Form } from "semantic-ui-react";
+import { Container, Dimmer, Form, Loader } from "semantic-ui-react";
 import "./calculator.scss";
 import { useEffect, useState } from "react";
 import { StarbucksPreset } from "../../interfaces/starbucks";
@@ -33,6 +33,7 @@ export function CalculatorView() {
 
   const [presets, setPresets] = useState(presetsInitialState);
   const [mustShowOffCanvas, setMustShowOffCanvas] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -95,7 +96,8 @@ export function CalculatorView() {
   };
 
   const activePreset = getActivePreset();
-  useEffect(() => {
+
+  const getResult = () => {
     if (!!startTime && !!endTime) {
       let _result = null;
 
@@ -120,14 +122,27 @@ export function CalculatorView() {
 
       setResult(_result);
     }
-  }, [presets, startTime, endTime, dummy, activePreset]);
+  };
+
+  useEffect(() => {
+    getResult();
+  }, [presets, licensePlate, startTime, endTime, dummy, activePreset]);
 
   useEffect(() => {
     setMustShowOffCanvas(false);
   }, [presets, dummy]);
 
+  useEffect(() => {
+    console.log(
+      "🚀 ~ file: calculator.tsx:137 ~ useEffect ~ isLoading:",
+      isLoading
+    );
+  }, [isLoading]);
   return (
     <Container className="calculator">
+      <Dimmer active={isLoading}>
+        <Loader active={isLoading} />
+      </Dimmer>
       <Form
         className="content"
         onSubmit={() => {
@@ -147,6 +162,7 @@ export function CalculatorView() {
           getActivePreset: getActivePreset,
           mustShowOffCanvas: mustShowOffCanvas,
           setMustShowOffCanvas: setMustShowOffCanvas,
+          setIsLoading: setIsLoading,
         })}
 
         {RenderPresets({
