@@ -1,10 +1,11 @@
 import { Button, Container, Icon } from "semantic-ui-react";
-import { CalculatorResult } from "../../interfaces/calculator-result";
-import { southBeverlyGrillCalculator } from "../../utils/calculator/south-beverly-grill";
-import { getDiffInHours, hourAndHalf, twoHours } from "../../utils/time";
-import { Spacer } from "../../components/spacer";
-import { SouthBeverlyGrillPreset } from "../../interfaces/south-beverly-grill";
-import { SaveResult } from "../../http/save-result";
+import { CalculatorResult } from "../../../interfaces/calculator-result";
+import { southBeverlyGrillCalculator } from "../../../utils/calculator/south-beverly-grill";
+import { getDiffInHours, hourAndHalf, twoHours } from "../../../utils/time";
+import { Spacer } from "../../../components/spacer";
+import { SouthBeverlyGrillPreset } from "../../../interfaces/south-beverly-grill";
+import { SaveResult } from "../../../http/save-result";
+import { SetStateAction } from "react";
 
 export interface RenderOffCanvasProps {
   result: CalculatorResult | undefined;
@@ -12,6 +13,7 @@ export interface RenderOffCanvasProps {
 
   startTime: string;
   endTime: string;
+  licensePlate: string;
 
   beverlyHoursToUse: number;
   setBeverlyHoursToUse: Function;
@@ -20,6 +22,8 @@ export interface RenderOffCanvasProps {
 
   mustShowOffCanvas: boolean;
   setMustShowOffCanvas: Function;
+
+  setIsLoading: Function;
 }
 
 export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
@@ -43,7 +47,15 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
         : `: $${props.result?.discount || 0}`,
     ];
 
-    let res: string[][] = [preset, parkingTime, totalParkedTime, discount];
+    const licensePlate = ["License plate: ", props.licensePlate];
+
+    let res: string[][] = [
+      preset,
+      parkingTime,
+      totalParkedTime,
+      discount,
+      licensePlate,
+    ];
 
     return res;
   };
@@ -69,10 +81,12 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
             backgroundImage: "linear-gradient(to right, #62C1FC , #7879E2)",
           }}
           onClick={() => {
-            if (!!props.result) SaveResult(props.result);
+            if (!!props.result) {
+              SaveResult(props.result, props.setIsLoading);
+            }
           }}
         >
-          Armazenar resultado
+          Save result
         </Button>
       </div>
     );
@@ -97,6 +111,7 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
           props.setResult(
             southBeverlyGrillCalculator(
               {
+                licensePlate: props.licensePlate,
                 parkingLot: props.getActivePreset(),
                 startTime: props.startTime,
                 endTime: props.endTime,

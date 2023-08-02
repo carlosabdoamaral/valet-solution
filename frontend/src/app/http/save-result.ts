@@ -3,34 +3,17 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from './firebase';
 import { CalculatorResult } from "../interfaces/calculator-result";
 import { notify } from "../utils/notify";
+import { SaveResultModel, fromCalculatorResultToSaveResult } from "../interfaces/save-result";
 
-export async function SaveResult(props: CalculatorResult) {
+export async function SaveResult(props: CalculatorResult, setIsLoading: Function) {
+    setIsLoading(true)
     try {
-        const validationsUsed = props.parkingLot.validations.filter(v => v.active === true).map(v => {
-            return {
-                key: v.key,
-                amount: v.amount,
-                name: v.name
-            }
-        })
-
-        const summary = {
-            start: props.startTime,
-            end: props.endTime,
-            amount: props.amount,
-            discount: props.discount,
-            validations_used: !!validationsUsed ? validationsUsed : ["No validations used"]
-        }
-
-        const parkinglot = {
-            key: props.parkingLot.id,
-            name: props.parkingLot.name,
-        }
-
+        const docData: SaveResultModel = fromCalculatorResultToSaveResult(props)
         const docRef = await addDoc(collection(db, "parking"), {
-            summary: summary,
-            parkinglot: parkinglot
-        });
+            ...docData
+        }).finally(() => {
+            setIsLoading(false)
+        })
 
         notify(`Document written with ID: ${docRef.id}`, 'success')
     } catch (e) {

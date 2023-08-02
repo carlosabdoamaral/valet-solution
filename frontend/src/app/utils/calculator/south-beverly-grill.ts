@@ -22,6 +22,7 @@ export function southBeverlyGrillCalculator(
   else if (amount <= props.parkingLot.min) amount = props.parkingLot.min;
 
   return {
+    licensePlate: props.licensePlate,
     parkingLot: props.parkingLot,
     startTime: moment(props.startTime).format(DateFormats.TIME),
     endTime: moment(props.endTime).format(DateFormats.TIME),
