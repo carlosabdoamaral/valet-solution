@@ -1,32 +1,12 @@
 import { Button, Container, Icon } from "semantic-ui-react";
-import { CalculatorResult } from "../../../interfaces/calculator-result";
-import { southBeverlyGrillCalculator } from "../../../utils/calculator/south-beverly-grill";
-import { getDiffInHours, hourAndHalf, twoHours } from "../../../utils/time";
-import { Spacer } from "../../../components/spacer";
-import { SouthBeverlyGrillPreset } from "../../../interfaces/south-beverly-grill";
+import { CalculatorSubComponentProps } from "..";
+import { getDiffInHours, hourAndHalf, twoHours } from "../../../common/time";
 import { SaveResult } from "../../../http/save-result";
-import { SetStateAction } from "react";
+import { southBeverlyGrillCalculator } from "../calculatorservice/southbeverlygrill.calculator";
+import { getSouthBeverlyGrillPreset } from "../../../common/presets";
+import { useEffect, useState } from "react";
 
-export interface RenderOffCanvasProps {
-  result: CalculatorResult | undefined;
-  setResult: Function;
-
-  startTime: string;
-  endTime: string;
-  licensePlate: string;
-
-  beverlyHoursToUse: number;
-  setBeverlyHoursToUse: Function;
-
-  getActivePreset: Function;
-
-  mustShowOffCanvas: boolean;
-  setMustShowOffCanvas: Function;
-
-  setIsLoading: Function;
-}
-
-export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
+export const RenderOffCanvas = (props: CalculatorSubComponentProps) => {
   const getDetailsList = (): string[][] => {
     const preset = ["Preset: ", props.result?.parkingLot.name || ""];
 
@@ -60,6 +40,8 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
     return res;
   };
 
+  const [saveResultBtnDisabled, setSaveResultBtnDisabled] = useState(false);
+
   const renderDetails = () => {
     return (
       <div className="result-details-list">
@@ -82,14 +64,20 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
           }}
           onClick={() => {
             if (!!props.result) {
+              setSaveResultBtnDisabled(true);
               SaveResult(props.result, props.setIsLoading);
             }
           }}
+          disabled={saveResultBtnDisabled}
         >
           Save result
         </Button>
       </div>
     );
+  };
+
+  const getActivePreset = () => {
+    return props.presets.filter((p) => p.active)[0];
   };
 
   const renderBeverlyGrillExtraButton = () => {
@@ -112,7 +100,7 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
             southBeverlyGrillCalculator(
               {
                 licensePlate: props.licensePlate,
-                parkingLot: props.getActivePreset(),
+                parkingLot: getActivePreset(),
                 startTime: props.startTime,
                 endTime: props.endTime,
               },
@@ -133,6 +121,10 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
       </div>
     );
   };
+
+  useEffect(() => {
+    setSaveResultBtnDisabled(false);
+  }, [props.mustShowOffCanvas]);
 
   return (
     <div
@@ -164,7 +156,7 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
         >
           ${props.result?.amount || 0}
         </h1>
-        {props.result?.parkingLot.name !== SouthBeverlyGrillPreset.name ? (
+        {props.result?.parkingLot.name !== getSouthBeverlyGrillPreset().name ? (
           <Container
             fluid
             style={{ textAlign: "center" }}
@@ -174,8 +166,8 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
           </Container>
         ) : null}
 
-        {Spacer(0, 30)}
-        {props.getActivePreset().id === 2 && renderBeverlyGrillExtraButton()}
+        <div style={{ height: "30px" }} />
+        {getActivePreset().id === 2 && renderBeverlyGrillExtraButton()}
         {renderDetails()}
       </div>
     </div>

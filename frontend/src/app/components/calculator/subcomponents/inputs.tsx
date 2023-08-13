@@ -1,24 +1,14 @@
-import { Form, Grid } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
+import { CalculatorSubComponentProps } from "..";
 
-export interface RenderInputsProps {
-  startTime: string;
-  setStartTime: Function;
-
-  endTime: string;
-  setEndTime: Function;
-
-  licensePlate: string;
-  setLicensePlate: Function;
-}
-
-export const RenderInputs = (props: RenderInputsProps) => {
+export const RenderInputs = (props: CalculatorSubComponentProps) => {
   return (
     <>
       <Form.Input
         placeholder={"License plate"}
         maxLength={3}
         type="text"
-        label="License plase"
+        label="License plate"
         value={props.licensePlate}
         onChange={(ev, data) => {
           props.setLicensePlate(data.value);

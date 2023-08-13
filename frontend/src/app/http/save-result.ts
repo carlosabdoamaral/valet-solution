@@ -1,9 +1,9 @@
 
 import { collection, addDoc } from "firebase/firestore";
-import { db } from './firebase';
+import { db } from '../db/firebase';
 import { CalculatorResult } from "../interfaces/calculator-result";
-import { notify } from "../utils/notify";
 import { SaveResultModel, fromCalculatorResultToSaveResult } from "../interfaces/save-result";
+import { notify } from "../common/notify";
 
 export async function SaveResult(props: CalculatorResult, setIsLoading: Function) {
     setIsLoading(true)

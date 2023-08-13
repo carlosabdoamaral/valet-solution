@@ -1,10 +1,7 @@
 import { Form, Grid } from "semantic-ui-react";
+import { CalculatorSubComponentProps } from "..";
 
-export interface RenderBtnsProps {
-  reset: Function;
-}
-
-export const RenderBtns = (props: RenderBtnsProps) => {
+export const RenderBtns = (props: CalculatorSubComponentProps) => {
   return (
     <Grid columns={2}>
       <Grid.Column>

@@ -1,11 +1,19 @@
 import { Container, Grid } from "semantic-ui-react";
 import { ParkingLot } from "../../../interfaces/parking-lot";
+import { CalculatorSubComponentProps } from "..";
 
-export interface RenderValidationsProps {
-  presets: ParkingLot[];
-  activateValidationByID: Function;
-}
-export const RenderValidations = (props: RenderValidationsProps) => {
+export const RenderValidations = (props: CalculatorSubComponentProps) => {
+  const activateValidationByID = (id: number) => {
+    const presetID = props.presets.filter((p) => p.active)[0].id;
+
+    const newPresetsState = props.presets;
+    newPresetsState[presetID].validations[id].active =
+      !newPresetsState[presetID].validations[id].active;
+
+    props.setPresets(newPresetsState);
+    props.forceRerender();
+  };
+
   return (
     <Grid columns={2} className="cell-list">
       {props.presets
@@ -16,7 +24,7 @@ export const RenderValidations = (props: RenderValidationsProps) => {
               <Container
                 className={v.active ? "cell active" : "cell disabled"}
                 onClick={() => {
-                  props.activateValidationByID(i);
+                  activateValidationByID(i);
                 }}
               >
                 {v.name}

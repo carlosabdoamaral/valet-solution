@@ -1,11 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { CalculatorView } from "./app/views/calculator/calculator";
+import { CalculatorComponent } from "./app/components/calculator";
 
 export const Controller = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={"/"} element={<CalculatorView />} />
+        <Route path={"/"} element={<CalculatorComponent />} />
       </Routes>
     </BrowserRouter>
   );

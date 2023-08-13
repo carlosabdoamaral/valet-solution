@@ -1,11 +1,10 @@
 import moment from "moment";
-import { CalculatorResult } from "../../interfaces/calculator-result";
-import { CalculatorHandlerProps } from "./handler";
-import { DateFormats } from "../date-formats";
-import { getDiffInMinutes } from "../time";
+import { CalculatorResult } from "../../../interfaces/calculator-result";
+import { DateFormats, getDiffInMinutes } from "../../../common/time";
+import { CalculatorControllerProps } from "./controller";
 
 export function southBeverlyGrillCalculator(
-  props: CalculatorHandlerProps,
+  props: CalculatorControllerProps,
   extraInterval: number
 ): CalculatorResult {
   let minutes = getDiffInMinutes(props.startTime, props.endTime);

@@ -1,5 +1,5 @@
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "./firebase";
+import { db } from "../db/firebase";
 import { SaveResultModel } from "../interfaces/save-result";
 
 export async function FetchResult(): Promise<SaveResultModel[]> {

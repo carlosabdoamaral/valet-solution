@@ -1,9 +1,9 @@
-import { CalculatorResult } from "../../interfaces/calculator-result";
-import { getDiffInMinutes } from "../time";
-import { CalculatorHandlerProps } from "./handler";
+import { CalculatorResult } from "../../../interfaces/calculator-result";
+import { getDiffInMinutes } from "../../../common/time";
+import { CalculatorControllerProps } from "./controller";
 
 export function defaultCalculator(
-  props: CalculatorHandlerProps
+  props: CalculatorControllerProps
 ): CalculatorResult {
   const minutes = getDiffInMinutes(props.startTime, props.endTime);
 

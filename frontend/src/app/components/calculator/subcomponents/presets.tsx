@@ -1,12 +1,8 @@
 import { Container, Grid } from "semantic-ui-react";
 import { ParkingLot } from "../../../interfaces/parking-lot";
+import { CalculatorSubComponentProps } from "..";
 
-export interface RenderPresetsProps {
-  presets: ParkingLot[];
-  activatePresetByID: Function;
-}
-
-export const RenderPresets = (props: RenderPresetsProps) => {
+export const RenderPresets = (props: CalculatorSubComponentProps) => {
   return (
     <Grid columns={2} className="cell-list">
       {props.presets.map((preset, i) => (
