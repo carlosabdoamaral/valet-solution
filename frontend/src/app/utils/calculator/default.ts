@@ -21,7 +21,6 @@ export function defaultCalculator(
   else if (amount <= props.parkingLot.min) amount = props.parkingLot.min;
 
   return {
-    licensePlate: props.licensePlate,
     parkingLot: props.parkingLot,
     startTime: props.startTime,
     endTime: props.endTime,
