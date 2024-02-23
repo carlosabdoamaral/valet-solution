@@ -1,9 +1,10 @@
-import { Container, Icon } from "semantic-ui-react";
-import { CalculatorResult } from "../../interfaces/calculator-result";
-import { southBeverlyGrillCalculator } from "../../utils/calculator/south-beverly-grill";
-import { getDiffInHours, hourAndHalf, twoHours } from "../../utils/time";
-import { Spacer } from "../../components/spacer";
-import { SouthBeverlyGrillPreset } from "../../interfaces/south-beverly-grill";
+import { Button, Container, Icon } from "semantic-ui-react";
+import { CalculatorResult } from "../../../interfaces/calculator-result";
+import { southBeverlyGrillCalculator } from "../../../utils/calculator/south-beverly-grill";
+import { getDiffInHours, hourAndHalf, twoHours } from "../../../utils/time";
+import { Spacer } from "../../../components/spacer";
+import { SouthBeverlyGrillPreset } from "../../../interfaces/south-beverly-grill";
+import { SaveResult } from "../../../http/save-result";
 
 export interface RenderOffCanvasProps {
   result: CalculatorResult | undefined;
@@ -19,6 +20,8 @@ export interface RenderOffCanvasProps {
 
   mustShowOffCanvas: boolean;
   setMustShowOffCanvas: Function;
+
+  setIsLoading: Function;
 }
 
 export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
@@ -51,13 +54,30 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
     return (
       <div className="result-details-list">
         {getDetailsList().map((v, i) => (
-          <div className="result-details-container" key={i}>
+          <div
+            className="result-details-container"
+            key={`result-details-container-${i}`}
+          >
             <h2 className="me-auto">
               {v[0]}
               {v[1]}
             </h2>
           </div>
         ))}
+        <Button
+          fluid
+          color="black"
+          style={{
+            backgroundImage: "linear-gradient(to right, #62C1FC , #7879E2)",
+          }}
+          onClick={() => {
+            if (!!props.result) {
+              SaveResult(props.result, props.setIsLoading);
+            }
+          }}
+        >
+          Save result
+        </Button>
       </div>
     );
   };

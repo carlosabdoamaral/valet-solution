@@ -1,19 +1,20 @@
-import { Container, Form } from "semantic-ui-react";
+import { Container, Dimmer, Form, Loader } from "semantic-ui-react";
 import "./calculator.scss";
 import { useEffect, useState } from "react";
-import { StarbucksPreset } from "../interfaces/starbucks";
-import { PromenadePreset } from "../interfaces/promenade";
-import { SouthBeverlyGrillPreset } from "../interfaces/south-beverly-grill";
-import { ParkingLot } from "../interfaces/parking-lot";
-import { CalculatorResult } from "../interfaces/calculator-result";
-import { southBeverlyGrillCalculator } from "../utils/calculator/south-beverly-grill";
-import { defaultCalculator } from "../utils/calculator/default";
+import { StarbucksPreset } from "../../interfaces/starbucks";
+import { PromenadePreset } from "../../interfaces/promenade";
+import { SouthBeverlyGrillPreset } from "../../interfaces/south-beverly-grill";
+import { ParkingLot } from "../../interfaces/parking-lot";
+import { CalculatorResult } from "../../interfaces/calculator-result";
+import { southBeverlyGrillCalculator } from "../../utils/calculator/south-beverly-grill";
+import { defaultCalculator } from "../../utils/calculator/default";
 import { RenderValidations } from "./render/validations";
 import { RenderOffCanvas } from "./render/offcanvas";
-import { twoHours } from "../utils/time";
+import { twoHours } from "../../utils/time";
 import { RenderPresets } from "./render/presets";
 import { RenderInputs } from "./render/inputs";
 import { RenderBtns } from "./render/buttons";
+import { VAPreset } from "../../interfaces/va";
 
 export function CalculatorView() {
   const presetsInitialState = [
@@ -29,10 +30,15 @@ export function CalculatorView() {
       ...SouthBeverlyGrillPreset,
       id: 2,
     },
+    {
+      ...VAPreset,
+      id: 3,
+    },
   ];
 
   const [presets, setPresets] = useState(presetsInitialState);
   const [mustShowOffCanvas, setMustShowOffCanvas] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -93,37 +99,52 @@ export function CalculatorView() {
   };
 
   const activePreset = getActivePreset();
-  useEffect(() => {
+
+  const getResult = () => {
     if (!!startTime && !!endTime) {
+      let _result = null;
+
       if (activePreset.name === SouthBeverlyGrillPreset.name) {
-        setResult(
-          southBeverlyGrillCalculator(
-            {
-              parkingLot: activePreset,
-              startTime: startTime,
-              endTime: endTime,
-            },
-            twoHours
-          )
-        );
-      } else {
-        setResult(
-          defaultCalculator({
+        _result = southBeverlyGrillCalculator(
+          {
             parkingLot: activePreset,
             startTime: startTime,
             endTime: endTime,
-          })
+          },
+          twoHours
         );
+      } else {
+        _result = defaultCalculator({
+          parkingLot: activePreset,
+          startTime: startTime,
+          endTime: endTime,
+        });
       }
+
+      setResult(_result);
     }
+  };
+
+  useEffect(() => {
+    getResult();
   }, [presets, startTime, endTime, dummy, activePreset]);
+
 
   useEffect(() => {
     setMustShowOffCanvas(false);
   }, [presets, dummy]);
 
+  useEffect(() => {
+    console.log(
+      "🚀 ~ file: calculator.tsx:137 ~ useEffect ~ isLoading:",
+      isLoading
+    );
+  }, [isLoading]);
   return (
     <Container className="calculator">
+      <Dimmer active={isLoading}>
+        <Loader active={isLoading} />
+      </Dimmer>
       <Form
         className="content"
         onSubmit={() => {
@@ -142,6 +163,7 @@ export function CalculatorView() {
           getActivePreset: getActivePreset,
           mustShowOffCanvas: mustShowOffCanvas,
           setMustShowOffCanvas: setMustShowOffCanvas,
+          setIsLoading: setIsLoading,
         })}
 
         {RenderPresets({

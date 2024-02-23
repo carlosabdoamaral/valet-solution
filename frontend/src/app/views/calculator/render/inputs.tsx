@@ -21,6 +21,7 @@ export const RenderInputs = (props: RenderInputsProps) => {
           props.setStartTime(data.value);
         }}
       />
+
       <Form.Input
         placeholder={"Exit"}
         required
