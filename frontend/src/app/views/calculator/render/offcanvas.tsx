@@ -5,7 +5,6 @@ import { getDiffInHours, hourAndHalf, twoHours } from "../../../utils/time";
 import { Spacer } from "../../../components/spacer";
 import { SouthBeverlyGrillPreset } from "../../../interfaces/south-beverly-grill";
 import { SaveResult } from "../../../http/save-result";
-import { SetStateAction } from "react";
 
 export interface RenderOffCanvasProps {
   result: CalculatorResult | undefined;
@@ -13,7 +12,6 @@ export interface RenderOffCanvasProps {
 
   startTime: string;
   endTime: string;
-  licensePlate: string;
 
   beverlyHoursToUse: number;
   setBeverlyHoursToUse: Function;
@@ -47,15 +45,7 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
         : `: $${props.result?.discount || 0}`,
     ];
 
-    const licensePlate = ["License plate: ", props.licensePlate];
-
-    let res: string[][] = [
-      preset,
-      parkingTime,
-      totalParkedTime,
-      discount,
-      licensePlate,
-    ];
+    let res: string[][] = [preset, parkingTime, totalParkedTime, discount];
 
     return res;
   };
@@ -111,7 +101,6 @@ export const RenderOffCanvas = (props: RenderOffCanvasProps) => {
           props.setResult(
             southBeverlyGrillCalculator(
               {
-                licensePlate: props.licensePlate,
                 parkingLot: props.getActivePreset(),
                 startTime: props.startTime,
                 endTime: props.endTime,

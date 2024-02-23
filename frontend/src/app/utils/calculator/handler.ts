@@ -1,10 +1,8 @@
 import { CalculatorResult } from "../../interfaces/calculator-result";
 import { ParkingLot } from "../../interfaces/parking-lot";
 import { defaultCalculator } from "./default";
-import { southBeverlyGrillCalculator } from "./south-beverly-grill";
 
 export interface CalculatorHandlerProps {
-  licensePlate: string
   parkingLot: ParkingLot;
   startTime: string;
   endTime: string;
